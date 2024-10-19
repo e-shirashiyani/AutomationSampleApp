@@ -1,34 +1,38 @@
-name: iOS CI # This is the name of the workflow
+name: iOS CI
 
-# Triggers that start the workflow:
 on:
-  push: # Run the workflow whenever code is pushed to the main branch
+  push:
     branches:
       - main
-  pull_request: # Run the workflow when a pull request is created targeting the main branch
+  pull_request:
     branches:
       - main
 
 jobs:
-  build: # Name of the job
-    runs-on: macos-latest # Xcode to build an iOS app
+  build:
+    runs-on: macos-latest
 
     steps:
-    - name: Checkout repository # Step 1: Checkout the code from your GitHub repository
+    - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set up Xcode # Step 2: Point to the correct version of Xcode
+    - name: Set up Xcode
       run: sudo xcode-select -switch /Applications/Xcode_15.4.app
-      # Ensure you have the correct Xcode version installed on the runner.
 
-    - name: Build app # Step 3: Build the app using Xcode with .xcodeproj
-      run: xcodebuild clean build -project AutomationTestProject.xcodeproj -scheme AutomationTestProject -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14'
+    - name: Reset Simulator
+      run: xcrun simctl shutdown all && xcrun simctl erase all
 
-    - name: Run tests # Step 4: Run any tests in your project
-      run: xcodebuild test -project AutomationTestProject.xcodeproj -scheme AutomationTestProject -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14'
+    - name: Boot iOS Simulator
+      run: xcrun simctl boot "iPhone 11"
 
-    - name: Archive build # Step 5: Archive the app for distribution
+    - name: Build app
+      run: xcodebuild clean build -project AutomationTestProject.xcodeproj -scheme AutomationTestProject -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 11'
+
+    - name: Run tests
+      run: xcodebuild test -project AutomationTestProject.xcodeproj -scheme AutomationTestProject -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 11' -destination-timeout 360
+
+    - name: Archive build
       run: xcodebuild archive -project AutomationTestProject.xcodeproj -scheme AutomationTestProject -archivePath $PWD/build/YourApp.xcarchive
 
-    - name: Export IPA # Step 6: Export the archived app to an .ipa file
+    - name: Export IPA
       run: xcodebuild -exportArchive -archivePath $PWD/build/AutomationTestProject.xcarchive -exportPath $PWD/build -exportOptionsPlist ./path/to/exportOptions.plist
