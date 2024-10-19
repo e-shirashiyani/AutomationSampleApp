@@ -42,7 +42,7 @@ jobs:
       run: xcodebuild clean build -project AutomationTestProject.xcodeproj -scheme AutomationTestProject -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14'
 
     - name: Archive build
-      run: xcodebuild archive -project AutomationTestProject.xcodeproj -scheme AutomationTestProject -archivePath $PWD/build/AutomationTestProject.xcarchive -configuration Release CODE_SIGN_IDENTITY="iPhone Developer" PROVISIONING_PROFILE_SPECIFIER="Your_Provisioning_Profile"
+      run: xcodebuild archive -project AutomationTestProject.xcodeproj -scheme AutomationTestProject -archivePath $PWD/build/AutomationTestProject.xcarchive -configuration Release
 
     - name: Export IPA
       run: xcodebuild -exportArchive -archivePath $PWD/build/AutomationTestProject.xcarchive -exportPath $PWD/build -exportOptionsPlist ./path/to/exportOptions.plist
