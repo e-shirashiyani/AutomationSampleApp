@@ -19,20 +19,29 @@ jobs:
     - name: Set up Xcode
       run: sudo xcode-select -switch /Applications/Xcode_15.4.app
 
-    - name: Reset Simulator
-      run: xcrun simctl shutdown all && xcrun simctl erase all
-
-    - name: Boot iOS Simulator
-      run: xcrun simctl boot "iPhone 14"
+    - name: Install certificates and provisioning profile
+      run: |
+        echo "$APP_STORE_CERTIFICATE" | base64 --decode > certificate.p12
+        echo "$PROVISIONING_PROFILE" | base64 --decode > profile.mobileprovision
+        security create-keychain -p "" build.keychain
+        security import certificate.p12 -k build.keychain -P "$CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+        security list-keychains -s build.keychain
+        security unlock-keychain -p "" build.keychain
+        mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+        cp profile.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/
+      env:
+        APP_STORE_CERTIFICATE: ${{ secrets.APP_STORE_CERTIFICATE }}
+        PROVISIONING_PROFILE: ${{ secrets.PROVISIONING_PROFILE }}
+        CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
 
     - name: Build app
       run: xcodebuild clean build -project AutomationTestProject.xcodeproj -scheme AutomationTestProject -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14'
 
     - name: Run tests
-      run: xcodebuild test -project AutomationTestProject.xcodeproj -scheme AutomationTestProject -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14' -destination-timeout 360
+      run: xcodebuild test -project AutomationTestProject.xcodeproj -scheme AutomationTestProject -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14'
 
     - name: Archive build
-      run: xcodebuild archive -project AutomationTestProject.xcodeproj -scheme AutomationTestProject -archivePath $PWD/build/YourApp.xcarchive
+      run: xcodebuild archive -project AutomationTestProject.xcodeproj -scheme AutomationTestProject -archivePath $PWD/build/YourApp.xcarchive -allowProvisioningUpdates
 
     - name: Export IPA
-      run: xcodebuild -exportArchive -archivePath $PWD/build/AutomationTestProject.xcarchive -exportPath $PWD/build -exportOptionsPlist ./path/to/exportOptions.plist
+      run: xcodebuild -exportArchive -archivePath $PWD/build/AutomationTestProject.xcarchive -exportPath $PWD/build -exportOptionsPlist ./path/to/exportOptions.plist -allowProvisioningUpdates
