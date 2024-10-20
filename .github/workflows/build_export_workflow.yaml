@@ -18,7 +18,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.1' # Ensure the correct Ruby version
+          ruby-version: '3.1'
           bundler-cache: true
 
       # Step 3: Install dependencies (Fastlane, CocoaPods, etc.)
@@ -40,24 +40,28 @@ jobs:
       - name: Fetch certificates and provisioning profiles using Fastlane Match
         run: bundle exec fastlane match appstore --verbose
         env:
-         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }} # Password for the certificate repository
-         MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}  # Git URL for match storage (GitHub)
-         FASTLANE_USER: ${{ secrets.FASTLANE_USER }} # Your Apple ID email for Fastlane
-         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }} # App-specific password for Apple ID
-         APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }} # App Store Connect API Key
+         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+         MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+         FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
 
-      # Step 6: Build and Upload to TestFlight with verbose logging
+      # Step 6: Build and Upload to TestFlight
       - name: Build and Upload to TestFlight
         run: bundle exec fastlane build_and_upload --verbose
         env:
-          APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }} # API key for App Store Connect
-          FASTLANE_USER: ${{ secrets.FASTLANE_USER }} # Apple ID email for Fastlane
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }} # App-specific password for Apple ID
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }} # Password to decrypt certificates and provisioning profiles
+          APP_STORE_CONNECT_API_KEY: |
+            {
+              "key_id": "${{ secrets.KEY_ID }}",
+              "issuer_id": "${{ secrets.ISSUER_ID }}",
+              "key": "${{ secrets.API_PRIVATE_KEY }}"
+            }
+          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
 
-      # Step 7: Save Xcode build logs if the build fails
+      # Step 7: Upload Xcode Logs
       - name: Upload Xcode Logs
-        if: failure() # Only upload logs if the build fails
+        if: failure()
         uses: actions/upload-artifact@v3
         with:
           name: xcode-build-logs
