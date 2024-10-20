@@ -1,4 +1,4 @@
-name: Build and Export iOS App
+name: Build and Upload to TestFlight
 
 on:
   push:
@@ -6,59 +6,55 @@ on:
       - main
 
 jobs:
-  build_and_upload:
+  build:
     runs-on: macos-latest
 
     steps:
-    # Step 1: Checkout the code
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    # Step 2: Set up Xcode
-    - name: Set up Xcode
-      run: sudo xcode-select -switch /Applications/Xcode_15.4.app
+      # Step 2: Set up Ruby environment
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1' # Use the Ruby version that matches your project
+          bundler-cache: true
 
-    # Step 3: Install Ruby gems via Bundler
-    - name: Install Ruby gems via Bundler
-      run: bundle install
+      # Step 3: Install dependencies (Fastlane, CocoaPods, etc.)
+      - name: Install dependencies
+        run: |
+          gem install bundler:2.5.21
+          bundle install --jobs 4 --retry 3
 
-    # Step 4: Install Certificate
-    - name: Install certificate
-      run: |
-        echo "$APP_STORE_CERTIFICATE" | base64 --decode > certificate.p12
-        security create-keychain -p "" build.keychain
-        security import certificate.p12 -k build.keychain -P "$CERTIFICATE_PASSWORD" -T /usr/bin/codesign
-        security list-keychains -s build.keychain
-        security unlock-keychain -p "" build.keychain
-      env:
-        APP_STORE_CERTIFICATE: ${{ secrets.APP_STORE_CERTIFICATE }}
-        CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
+      # Step 4: Cache CocoaPods dependencies
+      - name: Cache CocoaPods
+        uses: actions/cache@v2
+        with:
+          path: Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
 
-    # Step 5: Install Provisioning Profile
-    - name: Install provisioning profile
-      run: |
-        echo "$PROVISIONING_PROFILE" | base64 --decode > profile.mobileprovision
-        mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-        cp profile.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/
-      env:
-        PROVISIONING_PROFILE: ${{ secrets.PROVISIONING_PROFILE }}
+      # Step 5: Set up Fastlane match to handle code signing
+      - name: Fetch certificates and provisioning profiles using Fastlane Match
+        run: bundle exec fastlane match appstore --verbose
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }} # Ensure the match password is set as a secret in GitHub
 
-    # Step 6: Build the App
-    - name: Build the App
-      run: bundle exec fastlane build_app_only
-      env:
-        FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
-        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-        APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
-        APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
-        APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+      # Step 6: Build and Upload to TestFlight with verbose logging
+      - name: Build and Upload to TestFlight
+        run: bundle exec fastlane build_and_upload --verbose
+        env:
+          APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }} # API key for App Store Connect
+          FASTLANE_USER: ${{ secrets.FASTLANE_USER }} # Apple ID email for Fastlane
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }} # App-specific password for Apple ID
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }} # Password to decrypt certificates and provisioning profiles
 
-    # Step 7: Upload to TestFlight
-    - name: Upload to TestFlight
-      run: bundle exec fastlane upload_to_testflight
-      env:
-        FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
-        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-        APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
-        APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
-        APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+      # Step 7: Save Xcode build logs
+      - name: Upload Xcode Logs
+        if: failure() # Upload logs only if the build fails
+        uses: actions/upload-artifact@v3
+        with:
+          name: xcode-build-logs
+          path: ~/Library/Logs/gym/*.log
