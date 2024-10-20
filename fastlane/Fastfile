@@ -9,7 +9,7 @@ platform :ios do
       export_method: "app-store",
       export_options: {
         provisioningProfiles: {
-          "com.test.automationSampleTest" => "AutomationTestProject"
+          "com.test.automationSampleTest" => "AutomationTestAppDistributionProvisionProfile"
         },
         signingStyle: "manual",
         uploadSymbols: true,
