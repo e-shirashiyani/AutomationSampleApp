@@ -26,7 +26,6 @@ jobs:
         run: |
           gem install bundler:2.5.21
           bundle install --jobs 4 --retry 3
-
       # Step 4: Cache CocoaPods dependencies
       - name: Cache CocoaPods
         uses: actions/cache@v2
@@ -35,7 +34,6 @@ jobs:
           key: ${{ runner.os }}-pods-${{ hashFiles('Podfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-pods-
-
       # Step 5: Set up Fastlane match to handle code signing
       - name: Fetch certificates and provisioning profiles using Fastlane Match
         run: bundle exec fastlane match appstore --verbose
