@@ -1,3 +1,5 @@
+# Fastfile
+
 default_platform(:ios)
 
 platform :ios do
@@ -10,16 +12,20 @@ platform :ios do
       export_options: {
         provisioningProfiles: {
           "com.test.automationSampleTest" => "AutomationTestAppDistributionProvisionProfile"
-        },
-        signingStyle: "manual",
-        uploadSymbols: true,
-        uploadBitcode: false
+        }
       }
     )
   end
 
-  desc "Upload the build to TestFlight"
+  desc "Upload to TestFlight"
   lane :upload_to_testflight do
+    upload_to_testflight
+  end
+
+  # Add this new lane
+  desc "Build and upload to TestFlight"
+  lane :build_and_upload do
+    build_app_only
     upload_to_testflight
   end
 end
