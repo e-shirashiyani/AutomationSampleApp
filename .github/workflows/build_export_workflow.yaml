@@ -18,7 +18,7 @@ jobs:
     - name: Set up Xcode
       run: sudo xcode-select -switch /Applications/Xcode_15.4.app
 
-    # Step 3: Install dependencies using Bundler
+    # Step 3: Install Ruby gems via Bundler
     - name: Install Ruby gems via Bundler
       run: bundle install
 
@@ -43,12 +43,22 @@ jobs:
       env:
         PROVISIONING_PROFILE: ${{ secrets.PROVISIONING_PROFILE }}
 
-    # Step 6: Build and Upload to TestFlight using Fastlane
-    - name: Build and Upload to TestFlight
-      run: bundle exec fastlane build_and_upload
+    # Step 6: Build the App
+    - name: Build the App
+      run: bundle exec fastlane build_app_only
       env:
+        FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
         APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
         APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
         APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
-        FASTLANE_USER: ${{ secrets.FASTLANE_USER }} # Your Apple ID email for Fastlane
-        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }} # App-specific password for your Apple ID
+
+    # Step 7: Upload to TestFlight
+    - name: Upload to TestFlight
+      run: bundle exec fastlane upload_to_testflight
+      env:
+        FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+        APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+        APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+        APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
