@@ -43,9 +43,16 @@ jobs:
       env:
         PROVISIONING_PROFILE: ${{ secrets.PROVISIONING_PROFILE }}
 
-    - name: Build and Upload to TestFlight
-      run: fastlane build_and_upload
+    - name: Build the App
+      run: fastlane build_app_only
       env:
-        APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }} # Store App Store Connect API key in secrets
-        FASTLANE_USER: ${{ secrets.FASTLANE_USER }} # Your Apple ID email for Fastlane
-        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }} # App-specific password for your Apple ID
+        APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+        FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+
+    - name: Upload to TestFlight
+      run: fastlane upload_to_testflight --verbose
+      env:
+        APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+        FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
