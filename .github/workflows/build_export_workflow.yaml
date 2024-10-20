@@ -40,8 +40,9 @@ jobs:
       - name: Fetch certificates and provisioning profiles using Fastlane Match
         run: bundle exec fastlane match appstore --verbose
         env:
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }} # Ensure the match password is set as a secret in GitHub
-
+         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }} # Password to unlock the repository or encrypted files
+         MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}  # The Git URL to fetch the provisioning profiles and certificates
+  
       # Step 6: Build and Upload to TestFlight with verbose logging
       - name: Build and Upload to TestFlight
         run: bundle exec fastlane build_and_upload --verbose
