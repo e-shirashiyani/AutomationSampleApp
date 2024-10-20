@@ -16,6 +16,16 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - name: Cache SPM Dependencies
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/Library/Developer/Xcode/DerivedData
+          ~/.build
+        key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+        restore-keys: |
+          ${{ runner.os }}-spm-
+
     - name: Set up Xcode
       run: sudo xcode-select -switch /Applications/Xcode_15.4.app
 
