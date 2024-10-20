@@ -19,6 +19,9 @@ jobs:
     - name: Set up Xcode
       run: sudo xcode-select -switch /Applications/Xcode_15.4.app
 
+    - name: Boot iOS Simulator
+      run: xcrun simctl boot "iPhone 14"
+
     - name: Install certificate
       run: |
         echo "$APP_STORE_CERTIFICATE" | base64 --decode > certificate.p12
@@ -40,11 +43,3 @@ jobs:
 
     - name: Build and Run Tests
       run: xcodebuild clean test -project AutomationTestProject.xcodeproj -scheme AutomationTestProject -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14' -configuration Debug
-
-    - name: Check Test Results
-      if: failure()
-      run: exit 1
-
-    - name: Notify Success
-      if: success()
-      run: echo "All tests passed. Ready to merge to develop."
