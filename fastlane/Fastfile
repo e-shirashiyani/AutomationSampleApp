@@ -1,21 +1,25 @@
 default_platform(:ios)
 
 platform :ios do
-  desc "Build and upload to TestFlight"
-  lane :build_and_upload do
+  desc "Build the app"
+  lane :build_app_only do
     build_app(
-      project: "AutomationTestProject.xcodeproj", # Your project's .xcodeproj
-      scheme: "AutomationTestProject",            # Your app's scheme
-      export_method: "app-store",                 # Use app-store for TestFlight
+      project: "AutomationTestProject.xcodeproj",
+      scheme: "AutomationTestProject",
+      export_method: "app-store",
       export_options: {
         provisioningProfiles: {
-          "com.test.automationSampleTest" => "AutomationTestProject" # Your app's bundle identifier and profile name
+          "com.test.automationSampleTest" => "AutomationTestProject"
         },
         signingStyle: "manual",
         uploadSymbols: true,
         uploadBitcode: false
       }
     )
+  end
+
+  desc "Upload the build to TestFlight"
+  lane :upload_to_testflight do
     upload_to_testflight
   end
 end
