@@ -11,7 +11,6 @@ import SwiftUI
 struct AutomationTestProjectApp: App {
     var body: some Scene {
         WindowGroup {
-            //
             ContentView()
         }
     }
