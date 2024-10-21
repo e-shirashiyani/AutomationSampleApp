@@ -38,7 +38,7 @@ jobs:
 
       # Step 5: Fetch certificates and provisioning profiles using Fastlane Match
       - name: Fetch certificates and provisioning profiles using Fastlane Match
-        run: bundle exec fastlane match appstore --verbose
+        run:  bundle exec fastlane match appstore
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
@@ -52,7 +52,7 @@ jobs:
 
       # Step 7: Build and Upload to TestFlight
       - name: Build and Upload to TestFlight
-        run: bundle exec fastlane build_and_upload --verbose
+        run: bundle exec fastlane build_and_upload       
         env:
           APP_STORE_CONNECT_API_KEY: |
             {
