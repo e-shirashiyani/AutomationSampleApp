@@ -7,11 +7,10 @@ platform :ios do
   lane :build_app_only do
     build_app(
       project: "AutomationTestProject.xcodeproj",
-      scheme: "AutomationTestProject",
       export_method: "app-store",
       export_options: {
         provisioningProfiles: {
-          "com.test.automationSampleTest" => "AutomationTestAppDistributionProvisionProfile"
+          "com.test.automationSampleTest" => "match AppStore com.test.automationSampleTest"
         }
       }
     )
@@ -22,7 +21,6 @@ platform :ios do
     upload_to_testflight
   end
 
-  # Add this new lane
   desc "Build and upload to TestFlight"
   lane :build_and_upload do
     build_app_only
