@@ -18,8 +18,7 @@ platform :ios do
         }
       },
       xcargs: "-verbose CODE_SIGNING_LOG=1 -showBuildTimingSummary"
-  )
-    )
+    ) # Remove the extra parenthesis here
   end
 
   desc "Upload to TestFlight"
