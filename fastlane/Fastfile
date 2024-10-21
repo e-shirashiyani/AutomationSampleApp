@@ -22,11 +22,11 @@ platform :ios do
   end
 
   desc "Upload to TestFlight"
-  lane :upload_to_testflight_custom do
+  lane :upload_to_testflight_only do
     upload_to_testflight(
       api_key: {
         key_id: ENV['APP_STORE_CONNECT_KEY_ID'],
-        issuer_id: ENV['APP_STORE_CONNECT_ISSUER_ID'],
+        issuer_id: ENV['APP_STORE_CONNECT_ISSUER_ID'], 
         key: ENV['APP_STORE_CONNECT_API_KEY']
       }
     )
@@ -34,13 +34,7 @@ platform :ios do
 
   desc "Build and upload to TestFlight"
   lane :build_and_upload do
-    start_time = Time.now
     build_app_only
-    signing_time = Time.now
-    UI.message("Build and signing completed in #{signing_time - start_time} seconds")
-    
-    upload_to_testflight_custom
-    upload_time = Time.now
-    UI.message("Upload to TestFlight completed in #{upload_time - signing_time} seconds")
+    upload_to_testflight_only
   end
 end
