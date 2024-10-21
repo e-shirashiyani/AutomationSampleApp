@@ -16,7 +16,9 @@ platform :ios do
         provisioningProfiles: {
           "com.test.automationSampleTest" => "match AppStore com.test.automationSampleTest 1729493544"
         }
-      }
+      },
+  verbose: true
+
     )
   end
 
