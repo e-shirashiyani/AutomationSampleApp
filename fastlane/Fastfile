@@ -16,7 +16,9 @@ platform :ios do
         provisioningProfiles: {
           "com.test.automationSampleTest" => "match AppStore com.test.automationSampleTest 1729493544"
         }
-      }
+      },
+      xcargs: "-verbose CODE_SIGNING_LOG=1 -showBuildTimingSummary"
+  )
     )
   end
 
@@ -24,9 +26,9 @@ platform :ios do
   lane :upload_to_testflight_custom do
     upload_to_testflight(
       api_key: {
-        key_id: ENV['APP_STORE_CONNECT_KEY_ID'], # GitHub secret for App Store Connect API Key ID
-        issuer_id: ENV['APP_STORE_CONNECT_ISSUER_ID'], # GitHub secret for App Store Connect Issuer ID
-        key: ENV['APP_STORE_CONNECT_API_KEY'] # GitHub secret for App Store Connect API Key
+        key_id: ENV['APP_STORE_CONNECT_KEY_ID'],
+        issuer_id: ENV['APP_STORE_CONNECT_ISSUER_ID'], 
+        key: ENV['APP_STORE_CONNECT_API_KEY']
       }
     )
   end
