@@ -21,20 +21,20 @@ platform :ios do
     )
   end
 
- desc "Upload to TestFlight"
-lane :upload_to_testflight_custom do
-  upload_to_testflight(
-    api_key: {
-      key_id: ENV['APP_STORE_CONNECT_KEY_ID'],
-      issuer_id: ENV['APP_STORE_CONNECT_ISSUER_ID'], 
-      key: ENV['APP_STORE_CONNECT_API_KEY']
-    }
-  )
+  desc "Upload to TestFlight"
+  lane :upload_to_testflight_custom do
+    upload_to_testflight(
+      api_key: {
+        key_id: ENV['APP_STORE_CONNECT_KEY_ID'],
+        issuer_id: ENV['APP_STORE_CONNECT_ISSUER_ID'], 
+        key: ENV['APP_STORE_CONNECT_API_KEY']
+      }
+    )
   end
 
   desc "Build and upload to TestFlight"
   lane :build_and_upload do
     build_app_only
-    upload_to_testflight_only
+    upload_to_testflight_custom
   end
 end
