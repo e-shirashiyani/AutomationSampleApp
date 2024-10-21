@@ -50,7 +50,12 @@ jobs:
         run: |
           rm -rf ~/Library/Developer/Xcode/DerivedData
 
-      # Step 7: Build and Upload to TestFlight with verbose logging
+      # Step 7: Clean Previous Archives to avoid caching issues
+      - name: Clean Previous Archives
+        run: |
+          rm -rf ~/Library/Developer/Xcode/Archives/*
+
+      # Step 8: Build and Upload to TestFlight with verbose logging
       - name: Build and Upload to TestFlight
         run: bundle exec fastlane build_and_upload       
         env:
@@ -61,7 +66,7 @@ jobs:
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
 
-      # Step 8: Upload Xcode Logs after build (successful or failed)
+      # Step 9: Upload Xcode Logs after build (successful or failed)
       - name: Upload Xcode Logs
         uses: actions/upload-artifact@v3
         with:
