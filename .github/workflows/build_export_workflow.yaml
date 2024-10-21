@@ -38,7 +38,7 @@ jobs:
 
       # Step 5: Fetch certificates and provisioning profiles using Fastlane Match
       - name: Fetch certificates and provisioning profiles using Fastlane Match
-        run:  bundle exec fastlane match appstore
+        run:  bundle exec fastlane match appstore --readonly
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
