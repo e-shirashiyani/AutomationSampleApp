@@ -29,7 +29,15 @@ Build the app
 [bundle exec] fastlane ios upload_to_testflight
 ```
 
-Upload the build to TestFlight
+Upload to TestFlight
+
+### ios build_and_upload
+
+```sh
+[bundle exec] fastlane ios build_and_upload
+```
+
+Build and upload to TestFlight
 
 ----
 
