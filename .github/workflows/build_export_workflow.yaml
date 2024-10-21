@@ -38,7 +38,7 @@ jobs:
 
       # Step 5: Fetch certificates and provisioning profiles using Fastlane Match
       - name: Fetch certificates and provisioning profiles using Fastlane Match
-        run:  bundle exec fastlane match appstore --readonly
+        run: bundle exec fastlane match appstore --readonly
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
@@ -50,7 +50,7 @@ jobs:
         run: |
           rm -rf ~/Library/Developer/Xcode/DerivedData
 
-      # Step 7: Build and Upload to TestFlight
+      # Step 7: Build and Upload to TestFlight with verbose logging
       - name: Build and Upload to TestFlight
         run: bundle exec fastlane build_and_upload       
         env:
@@ -61,9 +61,8 @@ jobs:
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
 
-      # Step 8: Upload Xcode Logs if build fails
+      # Step 8: Upload Xcode Logs after build (successful or failed)
       - name: Upload Xcode Logs
-        if: failure()
         uses: actions/upload-artifact@v3
         with:
           name: xcode-build-logs
