@@ -14,7 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Set up Ruby environment
+      # Step 2: Set up Ruby environment and cache gems
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -24,12 +24,11 @@ jobs:
       # Step 3: Install dependencies (Fastlane, CocoaPods, etc.)
       - name: Install dependencies
         run: |
-          gem install bundler:2.5.21
           bundle install --jobs 4 --retry 3
 
       # Step 4: Cache CocoaPods dependencies
       - name: Cache CocoaPods
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: Pods
           key: ${{ runner.os }}-pods-${{ hashFiles('Podfile.lock') }}
@@ -64,7 +63,7 @@ jobs:
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
 
-      # Step 7: Upload Xcode Logs
+      # Step 7: Upload Xcode Logs if there's a failure
       - name: Upload Xcode Logs
         if: failure()
         uses: actions/upload-artifact@v3
