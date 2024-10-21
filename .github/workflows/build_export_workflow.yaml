@@ -50,22 +50,27 @@ jobs:
         run: |
           rm -rf ~/Library/Developer/Xcode/DerivedData
 
-      # Step 7: Clean Previous Archives to avoid caching issues
-      - name: Clean Previous Archives
-        run: |
-          rm -rf ~/Library/Developer/Xcode/Archives/*
-
-      # Step 8: Build and Upload to TestFlight with verbose logging
-      - name: Build and Upload to TestFlight
-        run: bundle exec fastlane build_and_upload
+      # Step 7: Build the app (only)
+      - name: Build the app
+        run: bundle exec fastlane build_app_only
         env:
-         APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
-         APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
-         APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
-         FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
-         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-         KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+
+      # Step 8: Upload the build to TestFlight (only)
+      - name: Upload to TestFlight
+        run: bundle exec fastlane upload_to_testflight_only
+        env:
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
 
       # Step 9: Upload Xcode Logs after build (successful or failed)
       - name: Upload Xcode Logs
