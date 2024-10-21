@@ -51,14 +51,15 @@ jobs:
           rm -rf ~/Library/Developer/Xcode/DerivedData
 
       # Step 7: Build and Upload to TestFlight
-      # Step 7: Build and Upload to TestFlight
       - name: Build and Upload to TestFlight
-        run: bundle exec fastlane build_and_upload
+        run: bundle exec fastlane build_and_upload       
         env:
-         KEY_ID: ${{ secrets.KEY_ID }}
-         ISSUER_ID: ${{ secrets.ISSUER_ID }}
-         API_PRIVATE_KEY: ${{ secrets.API_PRIVATE_KEY }}
-         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
 
       # Step 8: Upload Xcode Logs if build fails
       - name: Upload Xcode Logs
