@@ -2,7 +2,7 @@ default_platform(:ios)
 
 platform :ios do
   before_all do
-    # Select the correct Xcode version for CI
+    # Select the correct Xcode version for CI (if multiple versions are installed)
     xcode_select "/Applications/Xcode.app"
   end
 
@@ -16,19 +16,18 @@ platform :ios do
         provisioningProfiles: {
           "com.test.automationSampleTest" => "match AppStore com.test.automationSampleTest 1729493544"
         }
-      },
-  verbose: true
-
+      }
     )
   end
 
   desc "Upload to TestFlight"
   lane :upload_to_testflight_custom do
     upload_to_testflight(
-      username: ENV['FASTLANE_USER'], # GitHub secret for your Apple ID username
-      api_key_path: ENV['API_PRIVATE_KEY'], # App Store Connect API key, if required
-      team_id: ENV['FASTLANE_ITC_TEAM_ID'], # GitHub secret for the App Store Connect Team ID
-      skip_waiting_for_build_processing: true # Optional, speeds up the process
+      api_key: {
+        key_id: ENV['APP_STORE_CONNECT_KEY_ID'], # GitHub secret for App Store Connect API Key ID
+        issuer_id: ENV['APP_STORE_CONNECT_ISSUER_ID'], # GitHub secret for App Store Connect Issuer ID
+        key: ENV['APP_STORE_CONNECT_API_KEY'] # GitHub secret for App Store Connect API Key
+      }
     )
   end
 
