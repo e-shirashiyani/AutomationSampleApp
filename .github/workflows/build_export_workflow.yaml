@@ -82,14 +82,11 @@ jobs:
 
       # Step 10: Upload to TestFlight
       - name: Upload to TestFlight
-        run: bundle exec fastlane upload_to_testflight_custom
         env:
           APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
-          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        run: bundle exec fastlane upload_to_testflight_custom
 
       # Step 11: Upload Xcode Logs after build (successful or failed)
       - name: Upload Xcode Logs
