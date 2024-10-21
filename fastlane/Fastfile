@@ -10,6 +10,7 @@ platform :ios do
   lane :build_app_only do
     build_app(
       project: "AutomationTestProject.xcodeproj",
+      scheme: "AutomationTestProject",
       export_method: "app-store",
       export_options: {
         provisioningProfiles: {
