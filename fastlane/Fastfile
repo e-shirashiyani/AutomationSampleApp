@@ -18,6 +18,7 @@ platform :ios do
         }
       },
       xcargs: "-verbose CODE_SIGNING_LOG=1 -showBuildTimingSummary OTHER_CODE_SIGN_FLAGS='--verbose' SWIFT_SIGNING_LOG=1"
+keychain_password: ENV['KEYCHAIN_PASSWORD']
     )
   end
 
