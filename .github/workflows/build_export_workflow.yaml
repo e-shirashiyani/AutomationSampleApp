@@ -57,14 +57,15 @@ jobs:
 
       # Step 8: Build and Upload to TestFlight with verbose logging
       - name: Build and Upload to TestFlight
-        run: bundle exec fastlane build_and_upload       
+        run: bundle exec fastlane build_and_upload
         env:
-          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
-          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
-          APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
-          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+         APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+         APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+         APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+         FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+         KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
 
       # Step 9: Upload Xcode Logs after build (successful or failed)
       - name: Upload Xcode Logs
