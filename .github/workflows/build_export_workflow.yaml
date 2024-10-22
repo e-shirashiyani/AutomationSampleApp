@@ -35,7 +35,10 @@ jobs:
       - name: Decode Certificate
         run: |
           echo "${{ secrets.CERTIFICATE_P12_BASE64 }}" | base64 --decode > ./Certificates.p12
-
+      - name: Decode AuthKey
+        run: |
+          mkdir -p fastlane/certs
+          echo "${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}" | base64 --decode > fastlane/certs/AuthKey_***.p8
       # Step 6: Create and unlock the keychain
       - name: Create and unlock keychain
         run: |
