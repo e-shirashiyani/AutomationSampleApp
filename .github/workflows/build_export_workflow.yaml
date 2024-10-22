@@ -87,13 +87,18 @@ jobs:
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
 
-      # Step 12: Upload to TestFlight
+      # Step to export the path for the API key
+      - name: Set API Key Path
+        run: echo "API_KEY_PATH=$(pwd)/fastlane/certs/AuthKey.p8" >> $GITHUB_ENV
+ 
+# Run Fastlane
       - name: Upload to TestFlight
         run: bundle exec fastlane upload_to_testflight_custom
         env:
           APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+          API_KEY_PATH: ${{ env.API_KEY_PATH }}  # Add this line to pass the key path
 
       # Step 13: Upload Xcode Logs after build (successful or failed)
       - name: Upload Xcode Logs
