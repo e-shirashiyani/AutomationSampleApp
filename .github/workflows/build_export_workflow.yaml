@@ -36,10 +36,10 @@ jobs:
         run: |
           echo "${{ secrets.CERTIFICATE_P12_BASE64 }}" | base64 --decode > ./Certificates.p12
           
-      - name: Decode AuthKey
+      - name: Decode and save API key
         run: |
-          mkdir -p fastlane/certs
-          echo "${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}" | base64 --decode > fastlane/certs/AuthKey_Z63U6QP7DT.p8
+         mkdir -p fastlane/certs
+         echo "${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}" | base64 --decode > fastlane/certs/AuthKey_Z63U6QP7DT.p8
       # Step 6: Create and unlock the keychain
       - name: Create and unlock keychain
         run: |
@@ -83,7 +83,7 @@ jobs:
         env:
           APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
-          APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+          APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
 
       # Step 11: Upload Xcode Logs after build (successful or failed)
       - name: Upload Xcode Logs
