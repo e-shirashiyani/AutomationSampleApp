@@ -21,18 +21,19 @@ platform :ios do
     )
   end
 
- desc "Upload to TestFlight"
-lane :upload_to_testflight_custom do
-  api_key = Spaceship::ConnectAPI::Token.create(
-    key_id: ENV['APP_STORE_CONNECT_KEY_ID'],
-    issuer_id: ENV['APP_STORE_CONNECT_ISSUER_ID'],
-    key: File.read("/Users/e.shirashiyani/Desktop/Swift/AutomationTestProject/fastlane/certs/AuthKey_Z63U6QP7DT.p8") # Use full path here
-  )
-
-  upload_to_testflight(
-    api_key: api_key
-  )
-end
+  desc "Upload to TestFlight"
+  lane :upload_to_testflight_custom do
+    upload_to_testflight(
+      api_key: {
+        key_id: ENV['APP_STORE_CONNECT_KEY_ID'],   # Key ID from App Store Connect
+        issuer_id: ENV['APP_STORE_CONNECT_ISSUER_ID'], # Issuer ID from App Store Connect
+        key: ENV['APP_STORE_CONNECT_API_KEY']  # The decoded .p8 key
+      },
+      skip_waiting_for_build_processing: false, # Option to wait for the build to be processed
+      skip_submission: true,  # Skipping submission to app review
+      notify_testers: false    # You can change this to true if you want to notify testers
+    )
+  end
 
   desc "Build and upload to TestFlight"
   lane :build_and_upload do
