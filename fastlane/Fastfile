@@ -1,3 +1,6 @@
+# Force Fastlane to use the correct OpenSSL configuration
+ENV["OPENSSL_CONF"] = "/usr/local/etc/openssl/openssl.cnf"
+
 default_platform(:ios)
 
 platform :ios do
@@ -12,6 +15,8 @@ platform :ios do
       project: "AutomationTestProject.xcodeproj",
       scheme: "AutomationTestProject",
       export_method: "app-store",
+      output_directory: "./build",
+      output_name: "AutomationTestProject.ipa",
       export_options: {
         provisioningProfiles: {
           "com.test.automationSampleTest" => "match AppStore com.test.automationSampleTest 1729493544"
@@ -27,10 +32,11 @@ platform :ios do
       api_key: {
         key_id: ENV['APP_STORE_CONNECT_KEY_ID'],
         issuer_id: ENV['APP_STORE_CONNECT_ISSUER_ID'],
-        key: ENV['APP_STORE_CONNECT_API_KEY']
+        key: File.read('./fastlane/certs/AuthKey.p8')  # Read the API key from the saved file
       },
+      ipa: "./build/AutomationTestProject.ipa",  # Specify the built IPA path
       skip_waiting_for_build_processing: true,
-      skip_submission: true, 
+      skip_submission: true,
       notify_external_testers: false
     )
   end
