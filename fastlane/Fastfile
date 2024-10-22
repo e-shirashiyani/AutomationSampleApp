@@ -31,7 +31,7 @@ platform :ios do
       },
       skip_waiting_for_build_processing: false, # Option to wait for the build to be processed
       skip_submission: true,  # Skipping submission to app review
-      notify_testers: false    # You can change this to true if you want to notify testers
+      notify_external_testers: false    # Correct option for notifying testers
     )
   end
 
