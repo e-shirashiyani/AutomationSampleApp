@@ -36,10 +36,13 @@ jobs:
         run: |
           echo "${{ secrets.CERTIFICATE_P12_BASE64 }}" | base64 --decode > ./Certificates.p12
           
-      - name: Decode and set API key
+      - name: Decode and save API key
         run: |
-         echo "${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}" | base64 --decode > ./fastlane/certs/AuthKey.p8
-         export APP_STORE_CONNECT_API_KEY=$(cat ./fastlane/certs/AuthKey.p8)
+         mkdir -p ./fastlane/certs
+         echo "${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}" | base64 --decode > ./fastlane/certs/AuthKey_Z63U6QP7DT.p8
+
+      - name: Check API Key
+        run: cat ./fastlane/certs/AuthKey_Z63U6QP7DT.p8
          
       # Step 6: Create and unlock the keychain
       - name: Create and unlock keychain
