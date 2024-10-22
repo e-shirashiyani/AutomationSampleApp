@@ -27,7 +27,7 @@ lane :upload_to_testflight_custom do
     api_key: {
       key_id: ENV['APP_STORE_CONNECT_KEY_ID'],
       issuer_id: ENV['APP_STORE_CONNECT_ISSUER_ID'], 
-      key: File.read('/Users/e.shirashiyani/Desktop/Swift/AutomationTestProject/fastlane/certs/AuthKey_Z63U6QP7DT.p8').gsub(/\n/, '')
+      key: File.read('fastlane/certs/AuthKey_Z63U6QP7DT.p8').gsub(/\n/, '')  # Use relative path here
     }
   )
 end
