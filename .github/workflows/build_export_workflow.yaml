@@ -42,6 +42,10 @@ jobs:
           mkdir -p ./fastlane/certs
           echo "${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}" | base64 --decode > ./fastlane/certs/AuthKey.p8
           
+      # Optional: Check if the key exists (for debugging)
+      - name: Verify AuthKey.p8
+        run: ls -la ./fastlane/certs/AuthKey.p8
+        
       # Step 7: Check API Key (Optional, for debugging)
       - name: Check API Key
         run: cat ./fastlane/certs/AuthKey.p8
