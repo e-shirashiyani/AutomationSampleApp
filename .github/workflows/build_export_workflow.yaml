@@ -40,16 +40,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pods-
 
-      # Step 6: Decode the Base64 API Key and save it as a .p8 file
-      - name: Decode API Key
-        run: echo "${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}" | base64 --decode > fastlane/certs/AuthKey_***.p8
-
-      # Step 7: Decode the Base64 certificate and save it as a .p12 file
-      - name: Decode Certificate
+      # Step 6: Create the fastlane/certs directory and decode the API Key
+      - name: Create fastlane/certs directory and decode API Key
         run: |
-          echo "${{ secrets.CERTIFICATE_P12_BASE64 }}" | base64 --decode > Certificates.p12
+          mkdir -p fastlane/certs
+          echo "${{ secrets.APP_STORE_CONNECT_API_KEY }}" | base64 --decode > fastlane/certs/AuthKey_***.p8
 
-      # Step 8: Create and unlock the keychain
+      # Step 7: Create and unlock the keychain
       - name: Create and unlock keychain
         run: |
           security create-keychain -p "${{ secrets.KEYCHAIN_PASSWORD }}" build.keychain
@@ -61,7 +58,7 @@ jobs:
         env:
           CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
 
-      # Step 9: Fetch certificates and provisioning profiles using Fastlane Match
+      # Step 8: Fetch certificates and provisioning profiles using Fastlane Match
       - name: Fetch certificates and provisioning profiles using Fastlane Match
         run: bundle exec fastlane match appstore --readonly
         env:
@@ -70,12 +67,12 @@ jobs:
           FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
 
-      # Step 10: Clean Derived Data to avoid stale cache issues
+      # Step 9: Clean Derived Data to avoid stale cache issues
       - name: Clean Derived Data
         run: |
           rm -rf ~/Library/Developer/Xcode/DerivedData
 
-      # Step 11: Build the app
+      # Step 10: Build the app
       - name: Build the app
         run: bundle exec fastlane build_app_only
         env:
@@ -86,21 +83,21 @@ jobs:
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
 
-      # Step 12: Upload to TestFlight
+      # Step 11: Upload to TestFlight
       - name: Upload to TestFlight
+        run: bundle exec fastlane upload_to_testflight_custom
         env:
           APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
           APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
-        run: bundle exec fastlane upload_to_testflight_custom
 
-      # Step 13: Upload Xcode Logs after build (successful or failed)
+      # Step 12: Upload Xcode Logs after build (successful or failed)
       - name: Upload Xcode Logs
         uses: actions/upload-artifact@v3
         with:
           name: xcode-build-logs
           path: ~/Library/Logs/gym/*.log
 
-      # Step 14: Delete keychain (optional, for cleanup)
+      # Step 13: Delete keychain (optional, for cleanup)
       - name: Delete keychain
         run: security delete-keychain build.keychain
