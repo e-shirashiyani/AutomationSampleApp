@@ -27,7 +27,7 @@ platform :ios do
       api_key: {
         key_id: ENV['APP_STORE_CONNECT_KEY_ID'],
         issuer_id: ENV['APP_STORE_CONNECT_ISSUER_ID'], 
-        key: ENV['APP_STORE_CONNECT_API_KEY']
+        key: File.read('/Users/e.shirashiyani/Downloads/AuthKey_Z63U6QP7DT.p8').gsub(/\n/, '') # Load and remove line breaks
       }
     )
   end
