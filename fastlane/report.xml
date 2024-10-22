@@ -5,7 +5,7 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.000247">
+      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.000223">
         
       </testcase>
     
@@ -15,7 +15,22 @@
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="2: build_app" time="43.185088">
+      <testcase classname="fastlane.lanes" name="2: Switch to ios build_app_only lane" time="6.7e-05">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="3: build_app" time="39.800147">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="4: Switch to ios upload_to_testflight_custom lane" time="0.000322">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="5: upload_to_testflight" time="39.870937">
         
       </testcase>
     
