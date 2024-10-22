@@ -26,19 +26,17 @@ platform :ios do
     )
   end
 
-  desc "Upload to TestFlight"
-  lane :upload_to_testflight_custom do
-    upload_to_testflight(
-      api_key: {
-        key_id: ENV['APP_STORE_CONNECT_KEY_ID'],
-        issuer_id: ENV['APP_STORE_CONNECT_ISSUER_ID'],
-        key: File.read('./fastlane/certs/AuthKey.p8')  # Read the API key from the saved file
-      },
-      ipa: "./build/AutomationTestProject.ipa",  # Specify the built IPA path
-      skip_waiting_for_build_processing: true,
-      skip_submission: true,
-      notify_external_testers: false
-    )
+ upload_to_testflight(
+  api_key: {
+    key_id: ENV['APP_STORE_CONNECT_KEY_ID'],
+    issuer_id: ENV['APP_STORE_CONNECT_ISSUER_ID'],
+    key: File.read(ENV['API_KEY_PATH'])  # Use the environment variable for the path
+  },
+  ipa: "./build/AutomationTestProject.ipa",
+  skip_waiting_for_build_processing: true,
+  skip_submission: true,
+  notify_external_testers: false
+)
   end
 
   desc "Build and upload to TestFlight"
