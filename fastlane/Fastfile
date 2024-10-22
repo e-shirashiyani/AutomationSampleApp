@@ -21,16 +21,16 @@ platform :ios do
     )
   end
 
-  desc "Upload to TestFlight"
-  lane :upload_to_testflight_custom do
-    upload_to_testflight(
-      api_key: {
-        key_id: ENV['APP_STORE_CONNECT_KEY_ID'],
-        issuer_id: ENV['APP_STORE_CONNECT_ISSUER_ID'], 
-        key: File.read('fastlane/certs/AuthKey_Z63U6QP7DT.p8').gsub(/\n/, '')
-      }
-    )
-  end
+ desc "Upload to TestFlight"
+lane :upload_to_testflight_custom do
+  upload_to_testflight(
+    api_key: {
+      key_id: ENV['APP_STORE_CONNECT_KEY_ID'],
+      issuer_id: ENV['APP_STORE_CONNECT_ISSUER_ID'], 
+      key: File.read('/Users/e.shirashiyani/Desktop/Swift/AutomationTestProject/fastlane/certs/AuthKey_Z63U6QP7DT.p8').gsub(/\n/, '')
+    }
+  )
+end
 
   desc "Build and upload to TestFlight"
   lane :build_and_upload do
