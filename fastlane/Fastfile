@@ -23,12 +23,14 @@ platform :ios do
 
  desc "Upload to TestFlight"
 lane :upload_to_testflight_custom do
+  api_key = Spaceship::ConnectAPI::Token.create(
+    key_id: ENV['APP_STORE_CONNECT_KEY_ID'],
+    issuer_id: ENV['APP_STORE_CONNECT_ISSUER_ID'],
+    key: File.read("/Users/e.shirashiyani/Desktop/Swift/AutomationTestProject/fastlane/certs/AuthKey_Z63U6QP7DT.p8") # Use full path here
+  )
+
   upload_to_testflight(
-    api_key: {
-      key_id: ENV['APP_STORE_CONNECT_KEY_ID'],
-      issuer_id: ENV['APP_STORE_CONNECT_ISSUER_ID'], 
-      key: ENV['APP_STORE_CONNECT_API_KEY']  # Use the environment variable directly
-    }
+    api_key: api_key
   )
 end
 
