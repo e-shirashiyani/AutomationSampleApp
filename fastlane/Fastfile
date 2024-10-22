@@ -2,7 +2,7 @@ default_platform(:ios)
 
 platform :ios do
   before_all do
-    # Select the correct Xcode version for CI (if multiple versions are installed)
+    # Ensure correct Xcode version is selected
     xcode_select "/Applications/Xcode.app"
   end
 
@@ -14,10 +14,10 @@ platform :ios do
       export_method: "app-store",
       export_options: {
         provisioningProfiles: {
-          "com.test.automationSampleTest" => "match AppStore com.test.automationSampleTest 1729493544"
+          "com.test.automationSampleTest" => "match AppStore com.test.automationSampleTest"
         }
       },
-      xcargs: "-verbose CODE_SIGNING_LOG=1 -showBuildTimingSummary OTHER_CODE_SIGN_FLAGS='--verbose' SWIFT_SIGNING_LOG=1"
+      xcargs: "-verbose CODE_SIGNING_LOG=1 -showBuildTimingSummary"
     )
   end
 
@@ -25,13 +25,13 @@ platform :ios do
   lane :upload_to_testflight_custom do
     upload_to_testflight(
       api_key: {
-        key_id: ENV['APP_STORE_CONNECT_KEY_ID'],   # Key ID from App Store Connect
-        issuer_id: ENV['APP_STORE_CONNECT_ISSUER_ID'], # Issuer ID from App Store Connect
-        key: ENV['APP_STORE_CONNECT_API_KEY']  # The decoded .p8 key
+        key_id: ENV['APP_STORE_CONNECT_KEY_ID'],
+        issuer_id: ENV['APP_STORE_CONNECT_ISSUER_ID'],
+        key: ENV['APP_STORE_CONNECT_API_KEY']
       },
-      skip_waiting_for_build_processing: false, # Option to wait for the build to be processed
-      skip_submission: true,  # Skipping submission to app review
-      notify_external_testers: false    # Correct option for notifying testers
+      skip_waiting_for_build_processing: true,
+      skip_submission: true, 
+      notify_external_testers: false
     )
   end
 
