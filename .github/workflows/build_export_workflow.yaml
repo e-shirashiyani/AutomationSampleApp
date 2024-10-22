@@ -39,14 +39,14 @@ jobs:
       # Step 6: Create and unlock the keychain
       - name: Create and unlock keychain
         run: |
-          security create-keychain -p "${{ secrets.KEYCHAIN_PASSWORD }}" build.keychain
-          security list-keychains -s build.keychain
-          security unlock-keychain -p "${{ secrets.KEYCHAIN_PASSWORD }}" build.keychain
-          security set-keychain-settings build.keychain
-          security import ./fastlane/certs/AuthKey_Z63U6QP7DT.p8 -k build.keychain -T /usr/bin/codesign
-          security set-key-partition-list -S apple-tool:,apple: -s -k "${{ secrets.KEYCHAIN_PASSWORD }}" build.keychain
+         security create-keychain -p "${{ secrets.KEYCHAIN_PASSWORD }}" build.keychain
+         security list-keychains -s build.keychain
+         security unlock-keychain -p "${{ secrets.KEYCHAIN_PASSWORD }}" build.keychain
+         security set-keychain-settings build.keychain
+         security import ./Certificates.p12 -k build.keychain -P "${{ secrets.CERTIFICATE_PASSWORD }}" -T /usr/bin/codesign
+         security set-key-partition-list -S apple-tool:,apple: -s -k "${{ secrets.KEYCHAIN_PASSWORD }}" build.keychain
         env:
-          CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
+           CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
 
       # Step 7: Fetch certificates and provisioning profiles using Fastlane Match
       - name: Fetch certificates and provisioning profiles using Fastlane Match
